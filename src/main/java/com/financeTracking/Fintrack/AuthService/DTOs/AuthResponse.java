@@ -1,4 +1,4 @@
-package com.financeTracking.Fintrack.Security.DTOs;
+package com.financeTracking.Fintrack.AuthService.DTOs;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.financeTracking.Fintrack.Security;
+package com.financeTracking.Fintrack.AuthService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

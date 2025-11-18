@@ -1,9 +1,9 @@
-package com.financeTracking.Fintrack.Model;
+package com.financeTracking.Fintrack.TransactionService.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.financeTracking.Fintrack.AuthService.entities.User;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -13,18 +13,34 @@ public class Transactions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
-    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)  // Foreign Key
+    @JsonBackReference
+    private User user;
+
+    @Column(nullable = false)
     private String category;
+
+    @Column(nullable = false)
     private Double amount;
+
+    @Column(nullable = false)
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType type; // INCOME or EXPENSE
+
     private String description;
 
-    public Transactions(Long id, Long userId, String category, Double amount, LocalDate date, TransactionType type, String description) {
+
+    public Transactions() {
+    }
+
+    public Transactions(Long id, User user, String category, Double amount, LocalDate date, TransactionType type, String description) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.category = category;
         this.amount = amount;
         this.date = date;
@@ -32,7 +48,12 @@ public class Transactions {
         this.description = description;
     }
 
-    public Transactions() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {
@@ -41,14 +62,6 @@ public class Transactions {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getCategory() {

@@ -1,10 +1,14 @@
-package com.financeTracking.Fintrack.Controller;
+package com.financeTracking.Fintrack.TransactionService;
 
-import com.financeTracking.Fintrack.Model.Transactions;
-import com.financeTracking.Fintrack.Service.TransactionService;
+import com.financeTracking.Fintrack.AuthService.entities.User;
+import com.financeTracking.Fintrack.TransactionService.Model.TransactionDto;
+import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
+import com.financeTracking.Fintrack.TransactionService.Service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +36,9 @@ public class GreetingController {
     }
 
     @PostMapping("/transactions")
-    public ResponseEntity<Transactions> addTransaction(@RequestBody Transactions transac){
-        Transactions transactions = transactionService.addTransaction(transac);
+    public ResponseEntity<TransactionDto> addTransaction(Authentication authentication, @RequestBody TransactionDto transac){
+
+        TransactionDto transactions = transactionService.addTransaction(transac);
         return new ResponseEntity<>(transactions,HttpStatus.CREATED);
     }
 
@@ -48,4 +53,5 @@ public class GreetingController {
         String transactions = transactionService.deleteTransaction(id);
         return new ResponseEntity<>(transactions,HttpStatus.OK);
     }
+
 }

@@ -1,11 +1,11 @@
-package com.financeTracking.Fintrack.Security.Controller;
+package com.financeTracking.Fintrack.AuthService.Controller;
 
-import com.financeTracking.Fintrack.Security.DTOs.AuthRequest;
-import com.financeTracking.Fintrack.Security.DTOs.AuthResponse;
-import com.financeTracking.Fintrack.Security.DTOs.RegisterRequest;
-import com.financeTracking.Fintrack.Security.JwtService;
-import com.financeTracking.Fintrack.Security.entities.User;
-import com.financeTracking.Fintrack.Security.entities.UserRepository;
+import com.financeTracking.Fintrack.AuthService.DTOs.AuthRequest;
+import com.financeTracking.Fintrack.AuthService.DTOs.AuthResponse;
+import com.financeTracking.Fintrack.AuthService.DTOs.RegisterRequest;
+import com.financeTracking.Fintrack.AuthService.JwtService;
+import com.financeTracking.Fintrack.AuthService.entities.User;
+import com.financeTracking.Fintrack.AuthService.entities.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

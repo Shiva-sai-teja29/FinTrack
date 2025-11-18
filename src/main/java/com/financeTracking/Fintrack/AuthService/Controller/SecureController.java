@@ -1,4 +1,4 @@
-package com.financeTracking.Fintrack.Security.Controller;
+package com.financeTracking.Fintrack.AuthService.Controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

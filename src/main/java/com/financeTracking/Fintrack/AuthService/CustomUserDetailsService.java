@@ -1,7 +1,7 @@
-package com.financeTracking.Fintrack.Security;
+package com.financeTracking.Fintrack.AuthService;
 
-import com.financeTracking.Fintrack.Security.entities.User;
-import com.financeTracking.Fintrack.Security.entities.UserRepository;
+import com.financeTracking.Fintrack.AuthService.entities.User;
+import com.financeTracking.Fintrack.AuthService.entities.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,16 +19,24 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+//
+//        var authorities = user.getRoles().stream()
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toSet());
+//
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(), user.getPassword(), authorities);
+//    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        var authorities = user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), authorities);
+        return user;
     }
 }

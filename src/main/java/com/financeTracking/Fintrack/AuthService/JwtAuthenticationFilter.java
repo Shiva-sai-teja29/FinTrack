@@ -1,4 +1,4 @@
-package com.financeTracking.Fintrack.Security;
+package com.financeTracking.Fintrack.AuthService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

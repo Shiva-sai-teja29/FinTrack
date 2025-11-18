@@ -1,5 +1,8 @@
-package com.financeTracking.Fintrack.Security.entities;
+package com.financeTracking.Fintrack.AuthService.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.financeTracking.Fintrack.AnalyticsService.model.Budget;
+import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,10 +11,13 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,9 +32,9 @@ import java.util.Set;
         })
 public class User implements UserDetails {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
 
@@ -39,10 +45,8 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-
     @Column(nullable = false)
     private String password;
-
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -58,13 +62,27 @@ public class User implements UserDetails {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Transactions> transactions = new ArrayList<>();
 
-    // UserDetails methods
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Budget> budgets = new ArrayList<>();
+
+
+//    // UserDetails methods
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return roles.stream().map(role -> (GrantedAuthority) () -> role).toList();
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> (GrantedAuthority) () -> role).toList();
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role))
+                .toList();
     }
-
 
     @Override
     public boolean isAccountNonExpired() { return true; }
@@ -89,6 +107,34 @@ public class User implements UserDetails {
         this.roles = roles;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public User(Long id, String username, String email, String password, Set<String> roles, LocalDateTime createdAt, LocalDateTime updatedAt, List<Transactions> transactions, List<Budget> budgets) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.transactions = transactions;
+        this.budgets = budgets;
+    }
+
+    public List<Transactions> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transactions> transactions) {
+        this.transactions = transactions;
+    }
+
+    public List<Budget> getBudgets() {
+        return budgets;
+    }
+
+    public void setBudgets(List<Budget> budgets) {
+        this.budgets = budgets;
     }
 
     public User() {
