@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transactions, Long> {
@@ -42,4 +43,6 @@ public interface TransactionRepository extends JpaRepository<Transactions, Long>
     List<Object[]> categorySumsAllTypes(@Param("userId") Long userId,
                                         @Param("from") LocalDate from,
                                         @Param("to") LocalDate to);
+
+    Optional<Transactions> findByIdAndUserId(Long id, Long userId);
 }

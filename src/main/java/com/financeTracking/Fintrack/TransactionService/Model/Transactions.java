@@ -33,9 +33,17 @@ public class Transactions {
     private TransactionType type; // INCOME or EXPENSE
 
     private String description;
-
+    private String receiptPath;
 
     public Transactions() {
+    }
+
+    public String getReceiptPath() {
+        return receiptPath;
+    }
+
+    public void setReceiptPath(String receiptPath) {
+        this.receiptPath = receiptPath;
     }
 
     public Transactions(Long id, User user, String category, Double amount, LocalDate date, TransactionType type, String description) {
@@ -46,6 +54,17 @@ public class Transactions {
         this.date = date;
         this.type = type;
         this.description = description;
+    }
+
+    public Transactions(Long id, User user, String category, Double amount, LocalDate date, TransactionType type, String description, String receiptPath) {
+        this.id = id;
+        this.user = user;
+        this.category = category;
+        this.amount = amount;
+        this.date = date;
+        this.type = type;
+        this.description = description;
+        this.receiptPath = receiptPath;
     }
 
     public User getUser() {

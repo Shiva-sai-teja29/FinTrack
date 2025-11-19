@@ -1,6 +1,5 @@
-package com.financeTracking.Fintrack.TransactionService;
+package com.financeTracking.Fintrack.TransactionService.controller;
 
-import com.financeTracking.Fintrack.AuthService.entities.User;
 import com.financeTracking.Fintrack.TransactionService.Model.TransactionDto;
 import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
 import com.financeTracking.Fintrack.TransactionService.Service.TransactionService;
@@ -8,19 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class GreetingController {
+public class TransactionsController {
 
     @Autowired
     public TransactionService transactionService;
 
-    public GreetingController(TransactionService transactionService) {
+    public TransactionsController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
