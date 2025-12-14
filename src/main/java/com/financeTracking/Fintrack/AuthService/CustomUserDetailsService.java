@@ -1,14 +1,11 @@
 package com.financeTracking.Fintrack.AuthService;
 
 import com.financeTracking.Fintrack.AuthService.entities.User;
-import com.financeTracking.Fintrack.AuthService.entities.UserRepository;
+import com.financeTracking.Fintrack.AuthService.Repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

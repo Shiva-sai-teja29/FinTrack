@@ -1,5 +1,6 @@
-package com.financeTracking.Fintrack.AuthService.entities;
+package com.financeTracking.Fintrack.AuthService.Repository;
 
+import com.financeTracking.Fintrack.AuthService.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

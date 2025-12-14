@@ -28,7 +28,7 @@ public class TransactionsController {
     }
 
     @GetMapping("/transactions")
-    public ResponseEntity<List<Transactions>> allTransactions(){
+    public ResponseEntity<List<Transactions>> allTransactions(Authentication authentication){
         List<Transactions> transactions = transactionService.allTransactions();
         return ResponseEntity.ok(transactions);
     }

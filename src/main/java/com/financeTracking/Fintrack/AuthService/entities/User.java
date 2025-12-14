@@ -70,12 +70,10 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<Budget> budgets = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<RefreshToken> refreshToken = new ArrayList<>();
 
-//    // UserDetails methods
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return roles.stream().map(role -> (GrantedAuthority) () -> role).toList();
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -137,8 +135,8 @@ public class User implements UserDetails {
         this.budgets = budgets;
     }
 
-    public User() {
-    }
+//    public User() {
+//    }
 
     public Long getId() {
         return id;

@@ -1,7 +1,7 @@
 package com.financeTracking.Fintrack.TransactionService.Service;
 
 import com.financeTracking.Fintrack.AuthService.entities.User;
-import com.financeTracking.Fintrack.AuthService.entities.UserRepository;
+import com.financeTracking.Fintrack.AuthService.Repository.UserRepository;
 import com.financeTracking.Fintrack.TransactionService.Model.TransactionDto;
 import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
 import com.financeTracking.Fintrack.TransactionService.Repository.TransactionRepository;
