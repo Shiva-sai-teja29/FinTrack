@@ -5,9 +5,11 @@ import com.financeTracking.Fintrack.AuthService.JwtService;
 import com.financeTracking.Fintrack.AuthService.Repository.RefreshTokenRepository;
 import com.financeTracking.Fintrack.AuthService.Repository.UserRepository;
 import com.financeTracking.Fintrack.AuthService.Service.RefreshTokenService;
-import com.financeTracking.Fintrack.AuthService.Service.TokenBlacklistService;
+//import com.financeTracking.Fintrack.AuthService.Service.TokenBlacklistService;
 import com.financeTracking.Fintrack.AuthService.entities.RefreshToken;
 import com.financeTracking.Fintrack.AuthService.entities.User;
+import com.financeTracking.Fintrack.User.UserPreference.DefaultPreferences;
+import com.financeTracking.Fintrack.User.UserPreference.UserPreferences;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +33,17 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-    private final TokenBlacklistService tokenBlacklistService;
+
     private final RefreshTokenRepository refreshTokenRepository;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService, TokenBlacklistService tokenBlacklistService, RefreshTokenRepository refreshTokenRepository) {
+                          PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.refreshTokenService = refreshTokenService;
-        this.tokenBlacklistService = tokenBlacklistService;
+        //this.tokenBlacklistService = tokenBlacklistService;
         this.refreshTokenRepository = refreshTokenRepository;
     }
     @PostMapping("/login")
@@ -88,6 +90,16 @@ public class AuthController {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(Collections.singleton("ROLE_USER"));
+
+        UserPreferences prefs = new UserPreferences();
+        prefs.setCurrency(DefaultPreferences.DEFAULT_CURRENCY);
+        prefs.setTimezone(DefaultPreferences.DEFAULT_TIMEZONE);
+        prefs.setLanguage(DefaultPreferences.DEFAULT_LANGUAGE);
+        prefs.setEmailNotifications(DefaultPreferences.EMAIL_NOTIFICATIONS);
+        prefs.setPushNotifications(DefaultPreferences.PUSH_NOTIFICATIONS);
+
+        user.setPreferences(prefs);
+
         userRepository.save(user);
 
 
@@ -133,7 +145,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Invalid token");
         }
         String token = authHeader.substring(7);
-        tokenBlacklistService.blacklistToken(token);
+//        tokenBlacklistService.blacklistToken(token);
 
         String requestRefreshToken = request.getRefreshToken();
         if (refreshTokenService.findByToken(requestRefreshToken).isPresent()) {

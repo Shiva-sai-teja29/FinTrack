@@ -1,8 +1,10 @@
 package com.financeTracking.Fintrack.AuthService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.financeTracking.Fintrack.AnalyticsService.model.Budget;
 import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
+import com.financeTracking.Fintrack.User.UserPreference.UserPreferences;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +26,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_user_username", columnNames = "username"),
@@ -46,6 +47,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -74,6 +76,8 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<RefreshToken> refreshToken = new ArrayList<>();
 
+    @Embedded
+    private UserPreferences preferences;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -119,6 +123,20 @@ public class User implements UserDetails {
         this.budgets = budgets;
     }
 
+    public User(Long id, String username, String email, String password, Set<String> roles, LocalDateTime createdAt, LocalDateTime updatedAt, List<Transactions> transactions, List<Budget> budgets, List<RefreshToken> refreshToken, UserPreferences preferences) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.transactions = transactions;
+        this.budgets = budgets;
+        this.refreshToken = refreshToken;
+        this.preferences = preferences;
+    }
+
     public List<Transactions> getTransactions() {
         return transactions;
     }
@@ -135,8 +153,6 @@ public class User implements UserDetails {
         this.budgets = budgets;
     }
 
-//    public User() {
-//    }
 
     public Long getId() {
         return id;
@@ -192,5 +208,21 @@ public class User implements UserDetails {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<RefreshToken> getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(List<RefreshToken> refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public UserPreferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(UserPreferences preferences) {
+        this.preferences = preferences;
     }
 }

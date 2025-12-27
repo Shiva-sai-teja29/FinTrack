@@ -50,10 +50,7 @@ public class JwtService {
                 .parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
-//    public String extractUserId(String token) {
-//        // subject (sub) is where username/userId is stored by default
-//        return extractClaim(token, Claims::getSubject);
-//    }
+
 
     @SuppressWarnings("unchecked")
     public List<String> extractRoles(String token) {

@@ -5,6 +5,7 @@ import com.financeTracking.Fintrack.AnalyticsService.dto.MonthlySummaryDTO;
 import com.financeTracking.Fintrack.AnalyticsService.model.Budget;
 import com.financeTracking.Fintrack.AnalyticsService.repo.BudgetRepository;
 import com.financeTracking.Fintrack.AuthService.entities.User;
+import com.financeTracking.Fintrack.ExceptionHandler.ResourceNotFoundException;
 import com.financeTracking.Fintrack.TransactionService.Repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,9 @@ public class AnalyticsService {
 
     @Transactional(readOnly = true)
     public MonthlySummaryDTO getMonthlySummary(User user, YearMonth month) {
+
+        if (user == null) throw new ResourceNotFoundException("User not found");
+
         LocalDate from = monthStart(month);
         LocalDate to = monthEnd(month);
 
@@ -62,6 +66,9 @@ public class AnalyticsService {
 
     @Transactional(readOnly = true)
     public List<CategorySummaryDTO> getCategoryExpenseSplit(Long userId, YearMonth month) {
+
+        if (userId == null) throw new ResourceNotFoundException("User not found");
+
         LocalDate from = monthStart(month);
         LocalDate to = monthEnd(month);
 
@@ -75,6 +82,7 @@ public class AnalyticsService {
     // optionally: combined category sums for both types
     @Transactional(readOnly = true)
     public List<CategorySummaryDTO> getCategorySplitAllTypes(Long userId, YearMonth month) {
+        if (userId == null) throw new ResourceNotFoundException("User ID is required");
         LocalDate from = monthStart(month);
         LocalDate to = monthEnd(month);
 
@@ -85,6 +93,11 @@ public class AnalyticsService {
     }
 
     public BudgetLimitDTO addMonthlyLimit(User user, BudgetLimitDTO monthlyLimit) {
+
+        if (user == null) throw new ResourceNotFoundException("User not found");
+        if (monthlyLimit == null) throw new IllegalArgumentException("Monthly limit data is required");
+
+
         Budget budget = new Budget();
         budget.setMonthlyLimit(monthlyLimit.getMonthlyLimit());
         budget.setMonth(monthlyLimit.getMonth());
@@ -97,33 +110,37 @@ public class AnalyticsService {
     }
 
     public Optional<Budget> getMonthlyLimit(User user, YearMonth ym) {
+
+        if (user == null) throw new ResourceNotFoundException("User not found");
+
         String monthStr = ym.toString();
-        Optional<Budget> budget = budgetRepo.findByUserAndMonth(user, monthStr);
-        if (budget.isPresent()){
-            return budget;
-        }
-        return null;
+
+        return budgetRepo.findByUserAndMonth(user, monthStr);
     }
 
     public List<Budget> getAllMonthsLimit(User user) {
-        List<Budget> budget = budgetRepo.findByUserId(user.getId());
-        return budget;
+        if (user == null) throw new ResourceNotFoundException("User not found");
+        return budgetRepo.findByUserId(user.getId());
     }
 
     public BudgetLimitDTO updateMonthlyLimit(User user, BudgetLimitDTO monthlyLimit) {
 
-        Optional<Budget> budget = budgetRepo.findByUserAndMonth(user, monthlyLimit.getMonth());
-        if (budget.isPresent()) {
-            Budget existingBudget = budget.get();
-            existingBudget.setMonthlyLimit(monthlyLimit.getMonthlyLimit());
-            existingBudget.setMonth(monthlyLimit.getMonth());
+        if (user == null) throw new ResourceNotFoundException("User not found");
+        if (monthlyLimit == null) throw new IllegalArgumentException("Monthly limit data is required");
 
-            List<Budget> budgets = user.getBudgets();
-            budgets.add(existingBudget);
-            user.setBudgets(budgets);
-            budgetRepo.save(existingBudget);
-            return monthlyLimit;
+        Optional<Budget> budget = budgetRepo.findByUserAndMonth(user, monthlyLimit.getMonth());
+        if (budget.isEmpty()) {
+            throw new ResourceNotFoundException("Budget not found for month: " + monthlyLimit.getMonth());
         }
-        return null;
+        Budget existingBudget = budget.get();
+        existingBudget.setMonthlyLimit(monthlyLimit.getMonthlyLimit());
+        existingBudget.setMonth(monthlyLimit.getMonth());
+
+        List<Budget> budgets = user.getBudgets();
+        budgets.add(existingBudget);
+        user.setBudgets(budgets);
+        budgetRepo.save(existingBudget);
+        return monthlyLimit;
+
     }
 }

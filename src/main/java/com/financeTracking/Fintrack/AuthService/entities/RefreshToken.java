@@ -22,10 +22,6 @@ public class RefreshToken {
     @Column(nullable = false)
     private Instant expiryDate;
 
-    // getters + setters
-    // (or use Lombok @Data/@NoArgsConstructor/@AllArgsConstructor if you prefer)
-
-
     public RefreshToken() {
     }
 

@@ -45,4 +45,10 @@ public interface TransactionRepository extends JpaRepository<Transactions, Long>
                                         @Param("to") LocalDate to);
 
     Optional<Transactions> findByIdAndUserId(Long id, Long userId);
+
+    List<Transactions> findByUserId(Long userId);
+
+    @Query("SELECT COUNT(t) FROM Transactions t WHERE t.user.id = :userId")
+    long countByUserId(Long userId);
+
 }

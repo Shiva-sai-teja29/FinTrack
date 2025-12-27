@@ -34,6 +34,7 @@ public class Transactions {
 
     private String description;
     private String receiptPath;
+    private boolean hasReceipt;
 
     public Transactions() {
     }
@@ -56,7 +57,7 @@ public class Transactions {
         this.description = description;
     }
 
-    public Transactions(Long id, User user, String category, Double amount, LocalDate date, TransactionType type, String description, String receiptPath) {
+    public Transactions(Long id, User user, String category, Double amount, LocalDate date, TransactionType type, String description, String receiptPath, boolean hasReceipt) {
         this.id = id;
         this.user = user;
         this.category = category;
@@ -65,6 +66,15 @@ public class Transactions {
         this.type = type;
         this.description = description;
         this.receiptPath = receiptPath;
+        this.hasReceipt = hasReceipt;
+    }
+
+    public boolean isHasReceipt() {
+        return hasReceipt;
+    }
+
+    public void setHasReceipt(boolean hasReceipt) {
+        this.hasReceipt = hasReceipt;
     }
 
     public User getUser() {

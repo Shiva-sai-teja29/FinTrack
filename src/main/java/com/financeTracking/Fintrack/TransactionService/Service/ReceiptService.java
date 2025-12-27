@@ -1,5 +1,7 @@
 package com.financeTracking.Fintrack.TransactionService.Service;
 
+import com.financeTracking.Fintrack.ExceptionHandler.FileStorageException;
+import com.financeTracking.Fintrack.ExceptionHandler.ResourceNotFoundException;
 import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
 import com.financeTracking.Fintrack.TransactionService.Repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,10 @@ public class ReceiptService {
 
         Transactions tx = transactionRepository
                 .findByIdAndUserId(transactionId, userId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        try {
+
+
 
         // Create directory if not exists
         File dir = new File(UPLOAD_DIR);
@@ -42,16 +47,19 @@ public class ReceiptService {
 
         // Save path in DB
         tx.setReceiptPath(filePath.toString());
-
+        tx.setHasReceipt(true);
         return transactionRepository.save(tx);
+    } catch (IOException ex) {
+            throw new FileStorageException("Could not store file: " + file.getOriginalFilename(), ex);
+        }
     }
 
     public Transactions replaceReceipt(Long transactionId, Long userId, MultipartFile file) throws IOException {
 
         Transactions tx = transactionRepository
                 .findByIdAndUserId(transactionId, userId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+try{
         //  Delete old receipt file
         if (tx.getReceiptPath() != null) {
             File oldFile = new File(tx.getReceiptPath());
@@ -76,16 +84,21 @@ public class ReceiptService {
         tx.setReceiptPath(newFilePath.toString());
 
         return transactionRepository.save(tx);
+    }catch (IOException ex) {
+    throw new FileStorageException("Could not replace file: " + file.getOriginalFilename(), ex);
+}
     }
     public Resource downloadReceipt(Long transactionId, Long userId) throws IOException {
 
         Transactions tx = transactionRepository
                 .findByIdAndUserId(transactionId, userId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
 
         if (tx.getReceiptPath() == null) {
-            throw new RuntimeException("No receipt uploaded");
+            throw new ResourceNotFoundException("No receipt uploaded");
         }
+        try {
+
 
         Path filePath = Paths.get(tx.getReceiptPath());
         Resource resource = new UrlResource(filePath.toUri());
@@ -95,13 +108,16 @@ public class ReceiptService {
         }
 
         return resource;
+    }catch (IOException ex) {
+            throw new FileStorageException("Error reading receipt file", ex);
+        }
     }
 
     public Transactions deleteReceipt(Long transactionId, Long userId) {
 
         Transactions tx = transactionRepository
                 .findByIdAndUserId(transactionId, userId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
 
         if (tx.getReceiptPath() != null) {
 
@@ -111,6 +127,7 @@ public class ReceiptService {
             }
 
             tx.setReceiptPath(null); // remove link
+            tx.setHasReceipt(false);
             transactionRepository.save(tx);
         }
 

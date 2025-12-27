@@ -5,7 +5,10 @@ import com.financeTracking.Fintrack.AuthService.entities.User;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "budgets")
+@Table(name = "budgets",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "budget_month"})
+        })
 public class Budget {
     @Id
     @GeneratedValue
