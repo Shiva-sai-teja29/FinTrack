@@ -2,6 +2,7 @@ package com.financeTracking.Fintrack.AuthService;
 
 import com.financeTracking.Fintrack.AuthService.entities.User;
 import com.financeTracking.Fintrack.AuthService.Repository.UserRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

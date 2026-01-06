@@ -5,11 +5,15 @@ import com.financeTracking.Fintrack.AuthService.entities.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @Entity
-public class Transactions {
+public class Transactions implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;

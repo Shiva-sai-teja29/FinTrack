@@ -2,8 +2,12 @@ package com.financeTracking.Fintrack.User.UserPreference;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Embeddable
-public class UserPreferences {
+public class UserPreferences implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

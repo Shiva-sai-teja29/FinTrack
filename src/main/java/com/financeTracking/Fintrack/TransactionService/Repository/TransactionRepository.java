@@ -1,6 +1,8 @@
 package com.financeTracking.Fintrack.TransactionService.Repository;
 
 import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,9 +48,11 @@ public interface TransactionRepository extends JpaRepository<Transactions, Long>
 
     Optional<Transactions> findByIdAndUserId(Long id, Long userId);
 
-    List<Transactions> findByUserId(Long userId);
+    Page<Transactions> findByUserId(Long userId, Pageable pageable);
 
     @Query("SELECT COUNT(t) FROM Transactions t WHERE t.user.id = :userId")
     long countByUserId(Long userId);
 
+    Page<Transactions> findByUserIdAndDescriptionLikeIgnoreCaseOrUserIdAndCategoryLikeIgnoreCase(
+            Long id1, String description, Long id2,String category,Pageable pageable);
 }
