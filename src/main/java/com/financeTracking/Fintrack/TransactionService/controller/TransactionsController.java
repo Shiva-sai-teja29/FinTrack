@@ -2,9 +2,12 @@ package com.financeTracking.Fintrack.TransactionService.controller;
 
 import com.financeTracking.Fintrack.AuthService.entities.User;
 import com.financeTracking.Fintrack.TransactionService.Model.TransactionDto;
+import com.financeTracking.Fintrack.TransactionService.Model.TransactionResponse;
 import com.financeTracking.Fintrack.TransactionService.Model.Transactions;
 import com.financeTracking.Fintrack.TransactionService.Service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,16 +33,24 @@ public class TransactionsController {
     }
 
     @GetMapping("/transactions")
-    public ResponseEntity<List<Transactions>> allTransactions(Authentication authentication){
+    public ResponseEntity<TransactionResponse> allTransactions(
+            @RequestParam(required = false, defaultValue = "1") Integer pageNo,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false, defaultValue = "date") String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String search,
+            Authentication authentication){
+
         User user = extractUser();
-        List<Transactions> transactions = transactionService.allTransactions(user);
+        TransactionResponse transactions = transactionService
+                .allTransactions(user, pageNo, pageSize, sortBy, sortDir, search);
         return ResponseEntity.ok(transactions);
     }
 
     @PostMapping("/transactions")
-    public ResponseEntity<TransactionDto> addTransaction(Authentication authentication, @RequestBody TransactionDto transac){
+    public ResponseEntity<Transactions> addTransaction(Authentication authentication, @RequestBody TransactionDto transac){
 
-        TransactionDto transactions = transactionService.addTransaction(transac);
+        Transactions transactions = transactionService.addTransaction(transac);
         return new ResponseEntity<>(transactions,HttpStatus.CREATED);
     }
 
