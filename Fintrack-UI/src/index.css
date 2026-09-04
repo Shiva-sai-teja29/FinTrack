@@ -1,0 +1,11 @@
+@import "tailwindcss";
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional: Offset for fixed navbar */
+#transactions {
+  scroll-margin-top: 6rem; /* Adjust based on your navbar height */
+}
+
+@variant dark (&:where(.dark, .dark *));
